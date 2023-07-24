@@ -1,4 +1,4 @@
-﻿Model,Displ,Cyl,Trans,Drive,Fuel,Veh Class,Air Pollution Score,City MPG,Hwy MPG,Cmb MPG,Greenhouse Gas Score,SmartWay,Comb CO2
+﻿Model,Displ,Cyl,Trans,Drive,Fuel,VehClass,AirPollutionScore,CityMPG,HwyMPG,CmbMPG,GreenhouseGasScore,SmartWay,CombCO2
 ACURA Integra,1.5,4,SCV-7,2WD,Gasoline,Large Car,7,30,37,33,6,No,269
 ACURA Integra,1.5,4,SCV-7,2WD,Gasoline,Large Car,7,30,37,33,6,No,269
 ACURA Integra A-Spec,1.5,4,Man-6,2WD,Gasoline,Large Car,6,26,36,30,6,No,293

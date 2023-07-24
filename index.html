@@ -33,27 +33,27 @@ async function init() {
     cylinders.forEach(function (item,index) {
         cyl = {}
         cyl["count"] = 0
-        cyl["avgHighMPG"] = 0
-        cyl["avgCityMPG"] = 0
-        dict[item] = cyl
+        cyl["HwyMPG"] = 0
+        cyl["CityMPG"] = 0
+        dict[item] = Cyl
     });
 
     // Populate dictionary with number of cars with that number cylinder, avg highwaympg for that cylinder, and avg city mpg for that cylinder
     for (i=0; i < data.length; i++) {
         
         c = Number(data[i].EngineCylinders)
-        himpg = Number(data[i].AverageHighwayMPG)
-        cimpg = Number(data[i].AverageCityMPG)
+        himpg = Number(data[i].HwyMPG)
+        cimpg = Number(data[i].CityMPG)
 
         dict[c]["count"] += 1 
-        dict[c]["avgHighMPG"] += himpg
-        dict[c]["avgCityMPG"] += cimpg
+        dict[c]["HwyMPG"] += himpg
+        dict[c]["CityMPG"] += cimpg
          
     }
     
     cylinders.forEach(function (item,index) {
-        dict[item]["avgHighMPG"] = (dict[item]["avgHighMPG"] / dict[item]["count"]).toFixed(2)
-        dict[item]["avgCityMPG"] = (dict[item]["avgCityMPG"] / dict[item]["count"]).toFixed(2)
+        dict[item]["HwyMPG"] = (dict[item]["HwyMPG"] / dict[item]["count"]).toFixed(2)
+        dict[item]["CityMPG"] = (dict[item]["CityMPG"] / dict[item]["count"]).toFixed(2)
     });
     
     console.log(dict)
@@ -444,9 +444,9 @@ async function init() {
             .enter()
             .append('rect')
             .attr('x', function(d,i) {return x(i);})
-            .attr('y', function(d,i) {return y(d[1].avgHighMPG);})
+            .attr('y', function(d,i) {return y(d[1].HwyMPG);})
             .attr('width', x.bandwidth())
-            .attr('height',function(d,i) {return 600 - y(d[1].avgHighMPG);})
+            .attr('height',function(d,i) {return 600 - y(d[1].HwyMPG);})
             // Had help setting up tooltips from here: https://bl.ocks.org/d3noob/a22c42db65eb00d4e369
             .on("mouseover", function(index, data) {
              
@@ -458,7 +458,7 @@ async function init() {
                 .duration(200)
                 .style("opacity", 0.9);
                 tooltip.html(
-                    "Average Highway MPG: " + data[1].avgHighMPG
+                    "Average Highway MPG: " + data[1].HwyMPG
                     + "<br/> Number of cars: " + data[1].count
                     )
                 .style("left", (event.pageX) + "px")
@@ -486,9 +486,9 @@ async function init() {
             .enter()
             .append('rect')
             .attr('x', function(d,i) {return x(i);})
-            .attr('y', function(d,i) {return y(d[1].avgCityMPG);})
+            .attr('y', function(d,i) {return y(d[1].CityMPG);})
             .attr('width', x.bandwidth())
-            .attr('height',function(d,i) {return 600 - y(d[1].avgCityMPG);})
+            .attr('height',function(d,i) {return 600 - y(d[1].CityMPG);})
             .on("mouseover", function(index, data) {
                 
                 d3.select(this).transition()
@@ -499,7 +499,7 @@ async function init() {
                 .duration(200)
                 .style("opacity", 0.9);
                 tooltip.html(
-                    "Average City MPG: " + data[1].avgCityMPG
+                    "Average City MPG: " + data[1].CityMPG
                     + "<br/> Number of cars: " + data[1].count
                     )
                 .style("left", (event.pageX) + "px")

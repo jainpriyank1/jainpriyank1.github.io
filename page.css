@@ -1,0 +1,59 @@
+circle {
+    
+    stroke: black;
+}
+
+svg {
+    background-color: rgb(231, 231, 233);
+    font-family: 'Lato';
+    margin-top: 1em;
+    margin-bottom: 0em;
+    margin-left: 2em;
+    margin-right: 2em;
+}
+
+h1 {
+    margin: 1em;
+}
+
+body {
+    background-color: rgb(212, 230, 236);
+    font-family: "Times New Roman", Times, serif;
+    
+}
+
+rect {
+    fill: lightblue; stroke: black; 
+}
+
+.annotation-group, text.title {
+    font-size: 1em;
+}
+
+label {
+    margin-left: 2em;
+}
+
+p {
+    margin-top: 0.25em;
+    margin-left: 2em; 
+    margin-bottom: 0em;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: auto;
+    height: auto;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: lightblue;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+#zoomreset_btn {
+    margin-left: 10.5em;
+    margin-top: 0em;
+}

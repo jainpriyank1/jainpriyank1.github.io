@@ -554,8 +554,8 @@ async function init() {
             .data(data)
             .enter()
             .append('circle')
-            .attr('cx', function(d,i) {return scatter_x(d.AverageCityMPG);})
-            .attr('cy', function(d,i) {return scatter_y(d.AverageHighwayMPG);})
+            .attr('cx', function(d,i) {return scatter_x(d.CityMPG);})
+            .attr('cy', function(d,i) {return scatter_y(d.HwyMPG);})
             .attr('r', function(d,i) { return Number(d.EngineCylinders) + 5;})
             .style('fill', function(d,i) { return fuel_scale(d.Fuel);})
             .on("mouseover", function(index, data) {
@@ -568,8 +568,8 @@ async function init() {
                 .duration(200)
                 .style("opacity", 0.9);
                 tooltip.html(
-                    "Avg. City MPG: " + data.AverageCityMPG 
-                    + "<br/> Avg. Highway MPG: " + data.AverageHighwayMPG 
+                    "Avg. City MPG: " + data.CityMPG 
+                    + "<br/> Avg. Highway MPG: " + data.HwyMPG 
                     + "<br/> Fuel Type: " + data.Fuel
                     + "<br/> Cylinders: " + data.EngineCylinders
                     + "<br/> Make: " + data.Make

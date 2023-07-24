@@ -33,8 +33,8 @@ async function init() {
     cylinders.forEach(function (item,index) {
         cyl = {}
         cyl["count"] = 0
-        cyl["HwyMPG"] = 0
-        cyl["CityMPG"] = 0
+        cyl["HighMPG"] = 0
+        cyl["CtyMPG"] = 0
         dict[item] = cyl
     });
 
@@ -46,14 +46,14 @@ async function init() {
         cimpg = Number(data[i].CityMPG)
 
         dict[c]["count"] += 1 
-        dict[c]["HwyMPG"] += himpg
-        dict[c]["CityMPG"] += cimpg
+        dict[c]["HighMPG"] += himpg
+        dict[c]["CtyMPG"] += cimpg
          
     }
     
     cylinders.forEach(function (item,index) {
         dict[item]["HighMPG"] = (dict[item]["HighMPG"] / dict[item]["count"]).toFixed(2)
-        dict[item]["CityMPG"] = (dict[item]["CityMPG"] / dict[item]["count"]).toFixed(2)
+        dict[item]["CtyMPG"] = (dict[item]["CtyMPG"] / dict[item]["count"]).toFixed(2)
     });
     
     console.log(dict)
@@ -444,9 +444,9 @@ async function init() {
             .enter()
             .append('rect')
             .attr('x', function(d,i) {return x(i);})
-            .attr('y', function(d,i) {return y(d[1].HwyMPG);})
+            .attr('y', function(d,i) {return y(d[1].HighMPG);})
             .attr('width', x.bandwidth())
-            .attr('height',function(d,i) {return 600 - y(d[1].HwyMPG);})
+            .attr('height',function(d,i) {return 600 - y(d[1].HighMPG);})
             // Had help setting up tooltips from here: https://bl.ocks.org/d3noob/a22c42db65eb00d4e369
             .on("mouseover", function(index, data) {
              
@@ -458,7 +458,7 @@ async function init() {
                 .duration(200)
                 .style("opacity", 0.9);
                 tooltip.html(
-                    "Average Highway MPG: " + data[1].HwyMPG
+                    "Average Highway MPG: " + data[1].HighMPG
                     + "<br/> Number of cars: " + data[1].count
                     )
                 .style("left", (event.pageX) + "px")
@@ -486,9 +486,9 @@ async function init() {
             .enter()
             .append('rect')
             .attr('x', function(d,i) {return x(i);})
-            .attr('y', function(d,i) {return y(d[1].CityMPG);})
+            .attr('y', function(d,i) {return y(d[1].CtyMPG);})
             .attr('width', x.bandwidth())
-            .attr('height',function(d,i) {return 600 - y(d[1].CityMPG);})
+            .attr('height',function(d,i) {return 600 - y(d[1].CtyMPG);})
             .on("mouseover", function(index, data) {
                 
                 d3.select(this).transition()
@@ -499,7 +499,7 @@ async function init() {
                 .duration(200)
                 .style("opacity", 0.9);
                 tooltip.html(
-                    "Average City MPG: " + data[1].CityMPG
+                    "Average City MPG: " + data[1].CtyMPG
                     + "<br/> Number of cars: " + data[1].count
                     )
                 .style("left", (event.pageX) + "px")

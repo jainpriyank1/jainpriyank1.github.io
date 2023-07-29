@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>416 Final</title>
+    <link rel="stylesheet" href="./viz.css">
+  </head>
+  <body>
+    <main>
+        <h1>US consumer complaits are on the rise, according to FTC</h1>
+        <p>In the past few years, consumer complaints in the US are on the rise, according to FTC’s Consumer Financial Protection Bureau Consumer Complaint Database. In 2021, there are more than 5 million complaints cross the US, which was almost more than trippled compared to 2007.</p>
+        <p class="hed">Graphic: all type of complaits grows steadily since 2001<p>
+        <form id="form" class="btn-group btn-group-toggle" data-toggle="buttons">
+          <label class="btn btn-secondary active">
+            <input type="radio" name="controlSlide" value="data1" checked>1<br>
+          </label>
+          <label class="btn btn-secondary">
+            <input type="radio" name="controlSlide" value="data2">2<br>
+          </label>
+          <label class="btn btn-secondary">
+            <input type="radio" name="controlSlide" value="data3">3<br>
+          </label>
+          <label class="btn btn-secondary">
+            <input type="radio" name="controlSlide" value="data4">4<br>
+          </label>
+        </form>
+        <div id='chart1'></div>
+
+        <p>Among all the complaints received, fraud and identity theft complaints are the top complaint types. In 2021, Identity theft continues to top the consumer complaints since 2006. Usually, identity theft steals personal information, which they could use to run up people’s credit cards. Among all the identity theft complaints, 30% of which were tax or wage related, which is the largest category of identity theft complaints.<p>
+    </main>
+  <script src="./d3.v7.min.js"></script>
+  <script src="./d3-annotation.min.js"></script>
+	<script>
+    let margin = {top: 20, right: 60, bottom: 30, left: 50},
+        width = 700 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
+
+    let parseTime = d3.timeParse("%d-%b-%y");
+    let formatDate = d3.timeFormat("%Y");
+
+    let x_1 = d3.scaleTime().range([0, width]);
+    let y_1 = d3.scaleLinear().range([height, 0]);
+
+    let x_2 = d3.scaleBand().range([0, width]);
+
+    let valueline = d3.line()
+        .x(function(d) { return x_1(d.date); })
+        .y(function(d) { return y_1(d.close); });
+
+    let tooltip_1 = d3.select("#chart1").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+    let svg1 = d3.select("#chart1").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
+    svg1.append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .attr('class', 'Xaxis');
+
+    svg1.append("g")
+          .attr("class","Yaxis");
+
+    d3.csv("data2.csv").then(function(data) {
+      data1 = []
+      data2 = []
+      data3 = []
+      data4 = []
+        data.forEach(function(d) {
+          d.date = parseTime(d.date);
+          d.close = +d.close * 1000 / 1000000,2;
+          d.identity = +d.identity * 1000 / 1000000,2;
+          d.fraud = +d.fraud * 1000 / 1000000,2;
+          d.other = +d.other * 1000 / 1000000,2;
+          
+          data1.push({
+            date: d.date, 
+            close: d.identity
+          })
+
+          data2.push({
+            date: d.date, 
+            close: d.fraud
+          })
+
+          data3.push({
+            date: d.date, 
+            close: d.other
+          })
+
+          data4.push({
+            date: d.date, 
+            close: d.close
+          })
+        });
+
+      update(data1, {
+            year: "1-Jan-19", 
+            note: "Identity Theft became an increasing threat",
+            close: 0.65,
+            title: 'Number of identity theft complaints'
+          })
+
+      d3.selectAll("input").on("change", function(){
+       d3.selectAll("label").classed('active', false);
+       this.parentElement.classList.add('active');
+       if (this.value == 'data1'){
+        update(data1, {
+            year: "1-Jan-19", 
+            note: "Identity Theft became an increasing threat",
+            close: 0.65,
+            title: 'Number of identity theft complaints'
+          })
+       }else if (this.value == 'data2'){
+        update(data2, {
+            year: "1-Jan-16", 
+            note: "Fraud is on the rise regarless of tigher regulations",
+            close: 1.23,
+            title: 'Number of fraud complaints'
+          })
+       }else if (this.value == 'data3'){
+        update(data3, {
+            year: "1-Jan-15", 
+            note: "Other types of complaints are climbing too",
+            close: 1.43,
+            title: 'Number of other complaints'
+          })
+       }else if (this.value == 'data4'){
+        update(data4, {
+            year: "1-Jan-19", 
+            note: "Total number of complaints started surging",
+            close: 3.43,
+            title: 'Number of total complaints'
+          })
+       }
+      });
+
+    });
+
+    function update(data, annotation){
+
+        x_1.domain(d3.extent(data, function(d) { return d.date; }));
+        y_1.domain([0, 6]);
+        x_2.domain(data.map(function(d) { return d.date; }));
+
+        d3.select("#annotation-group").remove();
+
+        svg1.selectAll('.Yaxis')
+            .transition()
+            .duration(1000)
+            .call(d3.axisLeft(y_1));
+
+        svg1.selectAll('.Xaxis')
+            .transition()
+            .duration(1000)
+            .call(d3.axisBottom(x_1));
+
+        const labels = [{
+            note: {
+              label: annotation.note,
+              bgPadding: 20,
+              title: formatDate(parseTime(annotation.year))
+            },
+            //can use x, y directly instead of data
+            data: { date: annotation.year, close: annotation.close },
+            className: "show-bg",
+            dy: -50,
+            dx: -150
+          }]
+
+        const type = d3.annotationLabel
+
+        const makeAnnotations = d3.annotation()
+            .editMode(true)
+            //also can set and override in the note.padding property
+            //of the annotation object
+            .notePadding(15)
+            .type(type)
+            .accessors({
+                x: d => x_1(parseTime(d.date)) + margin.left,
+                y: d => y_1(d.close) + margin.top
+              })
+            .annotations(labels)
+
+        d3.select("svg")
+          .append("g")
+          .attr("id", "annotation-group")
+          .call(makeAnnotations)
+
+        let u = svg1.selectAll(".line")
+            .data([data], function(d){ return d.close });
+
+        u.enter()
+            .append("path")
+            .attr("class","line")
+            .merge(u)
+            .transition()
+            .duration(1000)
+           .attr("d", d3.line()
+              .x(function(d) { return x_1(d.date); })
+              .y(function(d) { return y_1(d.close); }))
+
+        d3.select("#chart-title").remove();
+
+        svg1.append("text")
+            .attr("x", 30)
+            .attr("y", 30)
+            .attr("dy", ".35em")
+            .attr("id", "chart-title")
+            .style("font-weight", "bold")
+            .text(annotation.title);
+
+        svg1.append("text")
+            .attr("x", 30)
+            .attr("y", 50)
+            .attr("dy", ".35em")
+            .attr("id", "chart-deck")
+            .style("fill", "#777")
+            .style("font-size", "14px")
+            .text("Hover over for more details");
+          
+        svg1.append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 0 - margin.left)
+          .attr("x",0 - (height / 2))
+          .attr("dy", "1em")
+          .style("text-anchor", "middle")
+          .text("# of complaints (M)");
+
+
+        svg1.selectAll('circle')
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr('cx', function(d) {
+                    return x_1(d.date)
+                    })
+            .attr('cy', function(d) {
+                    return y_1(d.close)
+                    })
+            .attr('r',4)
+                    .style("fill", "white")
+                    .style("stroke", '#777')
+                    .style("stroke-width", 2);
+
+        svg1.selectAll('circle')
+            .data(data)
+            .transition()
+            .duration(1000)
+            .attr('cx', function(d) {
+                    return x_1(d.date)
+            })
+            .attr('cy', function(d) {
+                    return y_1(d.close)
+            });
+        
+         let focus = svg1.append("g")
+            .attr("class", "focus")
+            .style("display", "none");
+
+        focus.append("circle")
+            .attr("r", 7);
+
+        focus.append("rect")
+            .attr("class", "tooltip")
+            .attr("width", 45)
+            .attr("height", 50)
+            .attr("x", 10)
+            .attr("y", -22)
+            .attr("rx", 4)
+            .attr("ry", 4);
+
+        focus.append("text")
+            .attr("class", "tooltip-date")
+            .attr("x", 18)
+            .attr("y", -2);
+
+        focus.append("text")
+            .attr("class", "tooltip-value")
+            .attr("x", 18)
+            .attr("y", 18);
+
+        svg1.selectAll("rect")
+            .data(data)
+            .enter()
+            .append("rect")
+              .attr("class", "overlay")
+              .attr("x", function(d) { return x_2(d.date); })
+              .attr("y", function(d) { return 0; })
+              .attr("width", x_2.bandwidth())
+              .attr("height", function(d) { return height; })
+            .on("mouseover", function() { focus.style("display", null); })
+            .on("mouseout", function() { focus.style("display", "none"); })
+            .on('mouseover', function(event, d){
+              focus.style("display", 'block')
+              focus.attr("transform", "translate(" + x_1(d.date) + "," + y_1(d.close) + ")");
+              focus.select(".tooltip-date").text(formatDate(d.date));
+              focus.select(".tooltip-value").text(d.close.toFixed(2));
+            })
+
+          }
+  </script>
+  </body>
+</html>
